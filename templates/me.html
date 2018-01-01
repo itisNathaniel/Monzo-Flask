@@ -1,0 +1,41 @@
+{% include 'header.html' %}
+
+<div class="card card-body card-100">
+<div class="row toprow">
+
+{% for account in accountsList %}
+<div class="card mb-3 " style="width: 15rem;">
+  <div class="card-body">
+    <h4 class="card-title">{{ account.type | replace("_", " " ) | upper }}</h4>
+    <p class="card-text">
+    {{ account.description | upper }}<br>
+    {% if account.type != 'uk_prepaid' %}
+    <div class="input-group">
+    <br> 
+    <div class="input-group-addon">Account</div>
+      <input type="text" readonly="" class="form-control" id="exampleInputAmount" value="{{ account.account_number }}"></input>
+    </div>
+    <br>
+    <div class="input-group">
+    <div class="input-group-addon">Sort Code</div>
+      <input type="text" readonly="" class="form-control" id="exampleInputAmount" value="{{ account.sort_code }}"></input>
+    </div>
+
+    {% endif %}
+
+    <br><br><br>
+    <form action="/transactions" method="POST">
+    <button type="submit" name="account_id" value="{{account.id}}">
+    View Transactions
+    </button>
+    </form>
+  </div>
+
+</div>
+ 
+{% endfor %}
+ </div>
+
+
+
+

@@ -1,0 +1,75 @@
+{% include 'header.html' %}
+<title> Transactions for {{ FriendlyName | replace("_", " " ) | upper }} </title>
+<a href="/">< Back</a>
+<div class="card card-100">
+  <h3 class="card-header headertitle">Transactions for {{ FriendlyName | replace("_", " " )| upper }}<br></h3>
+  <div class="card-body">
+
+<div class="row transact">
+
+{% for transaction in transactionlist %}
+<div class="card text-white bg-secondary mb-3 
+{% if transaction.amount < 0 %} {% else %} paymentin {% endif %}
+{% if transaction.scheme == 'mastercard' %} bg-secondary {% endif %}
+{% if transaction.scheme == 'uk_retail_pot' %} pot {% endif %}" style="max-width: 15rem;">
+  <div class="card-header">
+    <div class="shopicon" style="background-image: url({{shop_logo(transaction.id)}})"> 
+    </div></div>
+  <div class="card-body transactcontent">
+        <div class="date dateclr">{{ dateCreated(transaction.id) }}</div>
+      <span class="shopname">{{ shop_name(transaction.id)[:20] }}</span>
+      <div class="baseinfo">
+      <span class="value moneyout">{{ currency(transaction.id) }}</span>
+      <span class="purchasetype">
+      {% if transaction.notes %}{{ transaction.notes | truncate(40) }}{% elif transaction.category %}{{ transaction.category | replace("_", " " ) | title }}<br>{%endif%}</span>
+      {% if transaction.scheme == 'mastercard' %}<span class="placename">{{ shop_location(transaction.id) }}</span>
+      {% else %}<span class="method">{{transaction.scheme | replace("_", " " ) | replace("gps", " " ) | title}}</span>{% endif %}
+      <button type="button" class="dateclr btn btnmoreinfotrans text-white" data-toggle="modal" data-target="#{{transaction.id}}">
+      <i class="fa fa-info-circle" aria-hidden="true"></i></button>
+      </div>
+  </div>
+</div>
+
+  <!-- Modal -->
+<div class="modal fade" id="{{transaction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ shop_name(transaction.id) }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <div class="input-group">
+            <div class="input-group-addon">Amount</div>
+              <input type="text" readonly="" class="form-control" id="exampleInputAmount" value="{{ currency(transaction.id) }}"></input>
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-addon">Date</div>
+              <input type="text" readonly="" class="form-control" id="exampleInputAmount" value="{{ transaction.created }}"></input>
+          </div>
+          <br>
+          <div class="input-group">          
+            <div class="input-group-addon">Settled</div>
+              <input type="text" readonly="" class="form-control" id="exampleInputAmount" value="{{ transaction.settled }}"></input>
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="exampleTextarea">Notes</label>
+            <textarea readonly="" class="form-control" id="exampleTextarea" rows="3">{{ transaction.notes }}</textarea>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+</div>
