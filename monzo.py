@@ -11,7 +11,7 @@ server = "127.0.0.1"
 # Fetch credentials from file
 clientID = 'user_id_goes_here'
 authCode = 'access_token_goes_here'
-gc.collect()
+
 # Connect to Monzo API through pymonzo
 monzo = MonzoAPI(
     client_id=clientID,
